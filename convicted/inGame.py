@@ -1,15 +1,13 @@
 import pygame
-#import Character
 import floorCollision
 import movement
 import sys
 
 pygame.init()
 
-
-#Height and width of the screen
-Width = 1200
-Height = 900
+# Set screen size
+WIDTH = 1200
+HEIGHT = 500
 
 #Direction of the character. For x 1 is right and -1 is left, 0 is no movement.
 charXDirection = 0
@@ -23,37 +21,42 @@ floorYPos = 900
 #Used to check if the character has jumped and therefore if they are able to jump.
 jumped = False
 
+# Set up colours
 WHITE = (255,255,255)
-TRANSPARENT = (255,255,255,0)
 BLACK = (0,0,0)
-Purple = (146,32,164)
-BLUE = (0,0,255)
+GREY = (128,128,128)
+TRANSPARENT = (255,255,255,0)
+
 counter = 0
 counterIncrease = True
 
-window = pygame.display.set_mode((Width, Height),0, 32)
+# Set up window
+window = pygame.display.set_mode((WIDTH, HEIGHT),0, 32)
+
 font = pygame.font.SysFont(None,48)
 text = font.render("  ",True, WHITE,WHITE)
 character = text.get_rect()
 onFloor = False
 isSliding = False
-characterImage = pygame.image.load('guy.jpg')
+
+# Load images
+characterImage = pygame.image.load('8bitDude.png')
 characterImage2 = pygame.image.load('8bitDude.jpg')
 skipImage = pygame.image.load('skipSmallSize.jpg')
 binImage = pygame.image.load('binSmallSize.jpg')
 characterImageSlide = pygame.image.load('8bitDudeSlide.jpg')
-bikeRackImage = pygame.image.load('BikeRack.png')
+bikeRackImage = pygame.image.load('BikeRack.jpg')
+wall = pygame.image.load('wall.png')
+wall = pygame.transform.scale(wall,(30,100))
 
-firstFloor = (0, 880, Width, 20)
-secondFloor = (0, 500, Width/2, 20)
-secondFloor2 = (700, 500,Width/2, 20)
-thirdFloor = (0, 300, Width/4, 20)
-thirdFloor2 =(400, 300, Width/4, 20)
-thirdFloor3 = (800, 400, Width/4, 20)
-skip1 = (450,823,132,57)
-bin1 = (300,469,22,31)
-bikeRack = (900,836,87,44)
+# Set image rect positions
+firstFloor = (0, HEIGHT-20, WIDTH, 20)
+skip1 = (450,HEIGHT-77,132,57)
+bin1 = (300,HEIGHT-51,22,31)
+bikeRack = (900,HEIGHT - 64,87,44)
+wallObject = (700,HEIGHT-120,30,100)
 
+# Set up game loop
 while True:
                                                                                                                         #Checks if the player is pressing any key. Listener.
     pressed = pygame.key.get_pressed()
@@ -61,8 +64,7 @@ while True:
 
     if pressed[pygame.K_SPACE] and onFloor == True:
         jumped = True
-        charYDirection, charYPos = movement.jump(
-            charYPos)
+        charYDirection, charYPos = movement.jump(charYPos)
     elif pressed[pygame.K_s] or pressed[pygame.K_DOWN]:
         isSliding = True
     else:
@@ -82,31 +84,6 @@ while True:
             charYDirection = 1
         else:
             onFloor = True
-    elif character.colliderect(secondFloor) == True:
-        if charYPos >= secondFloor[1] + 20:
-            charYDirection = 1
-        else:
-            onFloor = True
-    elif character.colliderect(secondFloor2) == True:
-        if charYPos >= secondFloor2[1]+20:
-            charYDirection = 1
-        else:
-            onFloor = True
-    elif character.colliderect(thirdFloor) == True:
-        if charYPos >= thirdFloor[1]+20:
-            charYDirection = 1
-        else:
-            onFloor = True
-    elif character.colliderect(thirdFloor2) == True:
-        if charYPos >= thirdFloor2[1]+20:
-            charYDirection = 1
-        else:
-            onFloor = True
-    elif character.colliderect(thirdFloor3) ==True:
-        if charYPos >= thirdFloor3[1]+20:
-            charYDirection = 1
-        else:
-            onFloor = True
     else:
         onFloor = False
 
@@ -114,10 +91,11 @@ while True:
         charYDirection = 0
         jumped = False
                                                                                                                         #Checks if the player is pressing the right or d arrow keys. If they are the character moves to the right.
-
+    # Set up character collision
     onBin = character.colliderect(bin1)
     onSkip = character.colliderect(skip1)
     onBikeRack = character.colliderect(bikeRack)
+    onWall = character.colliderect(wallObject)
 
     if character.colliderect(bin1) == True:
         onBin = True
@@ -125,6 +103,8 @@ while True:
         onSkip = True
     elif character.colliderect(bikeRack) == True:
         onBikeRack = True
+    elif character.colliderect(wallObject) == True:
+        onWall = True
     else:
         onBin = False
         onSkip = False
@@ -133,7 +113,7 @@ while True:
 
 
     #Position checkers to see if the player is at the boundry of the screen.
-    charXpos = floorCollision.outOfBounds(charXpos,Width)
+    charXpos = floorCollision.outOfBounds(charXpos,WIDTH)
 
     if onBin == True:
         onBin = False
@@ -183,6 +163,22 @@ while True:
             charYDirection=0
             if pressed[pygame.K_SPACE]:
                 charYDirection = -4
+    if onWall == True:
+        onWall = False
+        if charXpos >= wallObject[0] + wallObject[2]:
+            if pressed[pygame.K_RIGHT] or pressed[pygame.K_d]:
+                charXDirection = 1
+            else:
+                charXDirection = 0
+        elif charXpos <= wallObject[0]:
+            if pressed[pygame.K_LEFT] or pressed[pygame.K_a]:
+                charXDirection = -1
+            else:
+                charXDirection = 0
+        elif charYPos <= wallObject[1]:
+            charYDirection = 0
+            if pressed[pygame.K_SPACE]:
+                charYDirection = -4
 
 
     charXpos = charXpos + charXDirection
@@ -200,7 +196,6 @@ while True:
         sys.exit()
 
     window.fill(WHITE)
-
 
 
     window.blit(text,character)
@@ -228,20 +223,17 @@ while True:
             counterIncrease = True
 
 
-    pygame.draw.rect(window,Purple, firstFloor)
-    pygame.draw.rect(window, Purple, secondFloor)
-    pygame.draw.rect(window,Purple,secondFloor2)
-    pygame.draw.rect(window, Purple, thirdFloor)
-    pygame.draw.rect(window, Purple, thirdFloor2)
-    pygame.draw.rect(window, Purple, thirdFloor3)
+    pygame.draw.rect(window,GREY, firstFloor)
 
-    pygame.draw.rect(window, BLUE,bin1)
-    pygame.draw.rect(window, BLUE,skip1)
+    pygame.draw.rect(window, WHITE,bin1)
+    pygame.draw.rect(window, WHITE,skip1)
     pygame.draw.rect(window, TRANSPARENT,bikeRack)
+    pygame.draw.rect(window,TRANSPARENT,wallObject)
 
     window.blit(binImage,(bin1[0],bin1[1]))
     window.blit(skipImage,(skip1[0],skip1[1]))
     window.blit(bikeRackImage,(bikeRack[0],bikeRack[1]))
+    window.blit(wall,(wallObject[0],wallObject[1]))
 
 
 
