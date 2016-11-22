@@ -1,4 +1,5 @@
 import pygame
+#import Character
 import floorCollision
 import movement
 import sys
@@ -23,6 +24,7 @@ floorYPos = 900
 jumped = False
 
 WHITE = (255,255,255)
+TRANSPARENT = (255,255,255,0)
 BLACK = (0,0,0)
 Purple = (146,32,164)
 BLUE = (0,0,255)
@@ -131,12 +133,7 @@ while True:
 
 
     #Position checkers to see if the player is at the boundry of the screen.
-    if charYPos <= 0:
-        charYPos =0
-    if charXpos>=1200:
-        charXpos =1200
-    if charXpos<=0:
-        charXpos =0
+    charXpos = floorCollision.outOfBounds(charXpos,Width)
 
     if onBin == True:
         onBin = False
@@ -216,6 +213,7 @@ while True:
         elif charXDirection < 0 :
             charXDirection += 0.1
 
+
     elif counterIncrease == True:
         pygame.draw.rect(window, WHITE, character)
         counter +=1
@@ -239,7 +237,7 @@ while True:
 
     pygame.draw.rect(window, BLUE,bin1)
     pygame.draw.rect(window, BLUE,skip1)
-    pygame.draw.rect(window, WHITE,bikeRack)
+    pygame.draw.rect(window, TRANSPARENT,bikeRack)
 
     window.blit(binImage,(bin1[0],bin1[1]))
     window.blit(skipImage,(skip1[0],skip1[1]))
