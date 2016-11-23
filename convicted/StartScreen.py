@@ -34,7 +34,7 @@ while running:
     mousePos = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
     if click[0] == True:
-        import main.py
+        import inGame.py
     event = pygame.event.poll()
     if event.type == pygame.QUIT:
         running = False
