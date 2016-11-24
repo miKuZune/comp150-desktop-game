@@ -23,7 +23,7 @@ charXDirection = 0
 charYDirection = 1
 # Sets the starting position for the character.
 charXpos = 50
-charYPos = 0
+charYpos = 0
 # Set floor position
 floorXPos = 100
 floorYPos = 900
@@ -49,7 +49,7 @@ characterslide.imageSlide = pygame.image.load('8bitDudeSlide.jpg')
 characterslide.rect = characterslide.imageSlide.get_rect()
 
 # Set up floor
-firstFloor = (0, WINDOW_HEIGHT - 20, WINDOW_WIDTH, 20)
+firstFloor = (0, 480, WINDOW_WIDTH, 20)
 
 # Set up wall
 wall = pygame.sprite.Sprite()
@@ -57,35 +57,36 @@ wall.image = pygame.image.load('wall.png')
 wall.image = pygame.transform.scale(wall.image, (30, 100))
 wall.rect = wall.image.get_rect()
 wall.rect.x = 700
-wall.rect.y = WINDOW_HEIGHT - 120
+wall.rect.y = 380
 
 # Set up bin
 bin = pygame.sprite.Sprite()
 bin.image = pygame.image.load('binSmallSize.jpg')
 bin.rect = bin.image.get_rect()
 bin.rect.x = 300
-bin.rect.y = WINDOW_HEIGHT - 51
+bin.rect.y = 449
 
 # Set up skip
 skip = pygame.sprite.Sprite()
 skip.image = pygame.image.load('skipSmallSize.jpg')
 skip.rect = skip.image.get_rect()
 skip.rect.x = 450
-skip.rect.y = WINDOW_HEIGHT - 77
+skip.rect.y = 423
 
 # Set up bike rack
-bikeRack= pygame.sprite.Sprite()
+bikeRack = pygame.sprite.Sprite()
 bikeRack.image = pygame.image.load('BikeRack.jpg')
 bikeRack.rect = bikeRack.image.get_rect()
 bikeRack.rect.x = 900
-bikeRack.rect.y = WINDOW_HEIGHT - 64
+bikeRack.rect.y = 436
 
 # Set up game loop
 while True:
-                                                                                                                        #Checks if the player is pressing any key. Listener.
-    pressed = pygame.key.get_pressed()
-    charYDirection += 0.1
 
+    pressed = pygame.key.get_pressed()
+    charYDirection += 1
+
+    # Set up character controls
     if pressed[pygame.K_SPACE] and onFloor:
         jumped = True
         charYDirection, charYPos = movement.jump(charYPos)
@@ -101,8 +102,7 @@ while True:
     else:
         charXDirection = 0
 
-
-                                                                                                                        #Checks if the players position is less than the position of the floor. If it is then it brings the player back up one space.
+    # Set up collision with floor
     if character.rect.colliderect(firstFloor):
         if charYPos >= firstFloor[1]+20:
             charYDirection = 1
@@ -111,11 +111,11 @@ while True:
     else:
         onFloor = False
 
-    if onFloor == True:
+    if onFloor:
         charYDirection = 0
         jumped = False
-                                                                                                                        #Checks if the player is pressing the right or d arrow keys. If they are the character moves to the right.
-    # Set up character collision
+
+    # Set up object collisions
     onBin = character.rect.colliderect(bin.rect)
     onSkip = character.rect.colliderect(skip.rect)
     onBikeRack = character.rect.colliderect(bikeRack.rect)
@@ -134,9 +134,9 @@ while True:
         onSkip = False
         onBikeRack = False
 
-
     # Keep character on screen
     charXpos = floorCollision.outOfBounds(charXpos,WINDOW_WIDTH)
+    charYpos = floorCollision.outOfBounds(charYpos,WINDOW_HEIGHT)
 
     if onBin:
         onBin = False
@@ -186,7 +186,7 @@ while True:
             charYDirection=0
             if pressed[pygame.K_SPACE]:
                 charYDirection = -4
-    if onWall == True:
+    if onWall:
         onWall = False
         if charXpos >= wall.rect[0] + wall.rect[2]:
             if pressed[pygame.K_RIGHT] or pressed[pygame.K_d]:
@@ -205,9 +205,9 @@ while True:
 
 
     charXpos = charXpos + charXDirection
-    charYPos = charYPos + charYDirection
+    charYPos = charYpos + charYDirection
     character.centerx = charXpos
-    character.centery = charYPos
+    character.centery = charYpos
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -220,11 +220,9 @@ while True:
 
     window.fill(WHITE)
 
-
     window.blit(character.image, character.rect)
     if isSliding == True:
-        window.blit(characterslide.rect, (charXpos - 9, charYPos - 6))
-        #charSlidingRect = (charXpos,charYPos,40,20)
+        window.blit(characterslide.imageSlide, (charXpos - 9, charYPos - 6))
         charXDirection = movement.slide(charXDirection)
         if charXDirection > 0:
             charXDirection -= 0.1
@@ -233,7 +231,7 @@ while True:
 
 
     elif counterIncrease == True:
-        pygame.draw.rect(window, WHITE, character)
+        pygame.draw.rect(window, WHITE, character.rect)
         counter +=1
         window.blit(character.image, (charXpos - 10, charYPos - 23))
         if(counter >= 25):
