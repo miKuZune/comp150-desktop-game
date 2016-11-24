@@ -14,7 +14,7 @@ WINDOW_WIDTH = 1200
 WINDOW_HEIGHT = 900
 
 # Set up background
-background = pygame.image.load('Menu Design 1.5-1.png')
+background = pygame.image.load('startscreenimage.png')
 background = pygame.transform.scale(background,(WINDOW_WIDTH, WINDOW_HEIGHT))
 
 # Blit window
@@ -26,7 +26,7 @@ icon = pygame.image.load('8bitDude.jpg')
 pygame.display.set_icon(icon)
 
 # Blit menu to screen
-pygame.display.set_caption('Start Screen')
+pygame.display.set_caption('Convicted')
 pygame.display.update()
 
 running = True
