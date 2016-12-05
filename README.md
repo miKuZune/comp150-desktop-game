@@ -3,8 +3,6 @@ A desktop game made collaboratively using C++ and SDL.
 
 Pitch Notes:
 
-This game is high voltage and involves a heavy amount of DANGER DANGER.
-
 Target Audience:16 - 35 year olds, males. PC Indie game players. Steam users. In USA, average male game player is 35 years old.
 
 Core Game Mechanics:Jump, slide and run.
