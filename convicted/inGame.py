@@ -70,7 +70,7 @@ while True:
     pressed = pygame.key.get_pressed()
     charYDirection += 0.1
 
-    if pressed[pygame.K_SPACE] and onFloor == True:
+    if pressed[pygame.K_SPACE] and onFloor:
         jumped = True
         charYDirection, charYPos = movement.jump(charYPos)
     elif pressed[pygame.K_s] or pressed[pygame.K_DOWN]:
@@ -87,7 +87,7 @@ while True:
 
 
                                                                                                                         #Checks if the players position is less than the position of the floor. If it is then it brings the player back up one space.
-    if character.colliderect(firstFloor) == True:
+    if character.colliderect(firstFloor):
         if charYPos >= firstFloor[1]+20:
             charYDirection = 1
         else:
@@ -113,33 +113,33 @@ while True:
     onWindow1_6 = character.colliderect(window1_6)
     #Position checkers to see if the player is at the boundry of the screen.
     charXpos = floorCollision.outOfBounds(charXpos,WIDTH)
-    if onBuilding == True:
+    if onBuilding:
         onBuilding = False
         if charYPos >= building1Roof[1]-30:
             charYDirection = 0
             onFloor = True
 
-    if onWindow1_1 == True:
+    if onWindow1_1:
         onWindow1_1 = False
         if charYPos >= window1_1[1] +23:
             charYDirection = 0
             onFloor = True
-    if onWindow1_2 ==True:
+    if onWindow1_2:
         onWindow1_2 = False
         if charYPos >= window1_2[1] + 23:
             charYDirection = 0
             onFloor = True
-    if onWindow1_3 == True:
+    if onWindow1_3:
         onWindow1_3 = False
         if charYPos >= window1_3[1]+23:
             charYDirection = 0
             onFloor = True
-    if onWindow1_4 == True:
+    if onWindow1_4:
         onWindow1_4 = False
         if charYPos >= window1_4[1]+23:
             charYDirection = 0
             onFloor = True
-    if onWindow1_5 == True:
+    if onWindow1_5:
         onWindow1_5 = False
         if charYPos >= window1_5[1]+23:
             charYDirection = 0
@@ -150,7 +150,7 @@ while True:
             charYDirection = 0
             onFloor = True
 
-    if onBin == True:
+    if onBin:
         onBin = False
         if charXpos >= bin1[0]+bin1[2]:
             if pressed[pygame.K_RIGHT] or pressed[pygame.K_d]:
@@ -165,7 +165,7 @@ while True:
         elif charYPos <= bin1[1]:
             charYDirection = 0
             onFloor = True
-    if onSkip == True:
+    if onSkip:
         onSkip = False
         if charXpos >= skip1[0] + skip1[2]:
             if pressed[pygame.K_RIGHT] or pressed[pygame.K_d]:
@@ -180,7 +180,7 @@ while True:
         elif charYPos <= skip1[1]:
             charYDirection = 0
             onFloor = True
-    if onBikeRack == True:
+    if onBikeRack:
         onBikeRack = False
         if charXpos >= bikeRack[0]+bikeRack[2] and isSliding == False:
             if pressed[pygame.K_RIGHT] or pressed[pygame.K_d]:
@@ -195,7 +195,7 @@ while True:
         elif charYPos <= bikeRack[1]:
             charYDirection=0
             onFloor = True
-    if onWall == True:
+    if onWall:
         onWall = False
         if charXpos >= wallObject[0] + wallObject[2]:
             if pressed[pygame.K_RIGHT] or pressed[pygame.K_d]:
@@ -242,7 +242,7 @@ while True:
     window.blit(wall,(wallObject[0],wallObject[1]))
 
 
-    if isSliding == True:
+    if isSliding:
         window.blit(characterImageSlide,(charXpos - 9,charYPos - 6))
         charSlidingRect = (charXpos,charYPos,40,20)
         charXDirection = movement.slide(charXDirection)
